@@ -1,0 +1,5 @@
+menuitem "Lambda Control"
+slider Lambda(0,10,1,1,lambda_slider)
+{
+	lambda = lambda_slider*0.1;
+}

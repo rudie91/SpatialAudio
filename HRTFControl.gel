@@ -1,0 +1,5 @@
+menuitem "HRTFcontrol";
+slider THETA(0, 23, 1, 1, theta_slider)
+{
+ theta = theta_slider;
+}

@@ -1,0 +1,6 @@
+menuitem "Azimuth Control"
+
+slider Azimuth(0,100,1,1,azimuth_slider)
+{
+	azimuth = azimuth_slider*3.14159*0.01 - 3.14159*0.5;
+}
