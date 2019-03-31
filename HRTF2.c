@@ -11,8 +11,8 @@
 #include "HRTF2D.txt"
 
 #define LENGTH 50
-float x_l[LENGTH];
-float x_r[LENGTH];
+float x[LENGTH];
+
 
 int t = 0; //time index(ptr)
 int i;
@@ -33,14 +33,14 @@ interrupt void interrupt4(void) // interrupt service routine
     Linput = codec_data.channel[LEFT];
     Rinput = codec_data.channel[RIGHT];
 
-    x_l[t] = Linput;
-    x_r[t] = Rinput;
+    // downmix to mono
+    x = 0.5*(Linput + Rinput);
 
     // Filter with hrtf coefficients
     for (i = 0; i < LENGTH; i++)
     {
-      L += hrtf_l[theta][i]*x_l[(t + (LENGTH - i))%LENGTH];
-      R += hrtf_r[theta][i]*x_r[(t + (LENGTH - i))%LENGTH];
+      L += hrtf_l[theta][i]*x[(t + (LENGTH - i))%LENGTH];
+      R += hrtf_r[theta][i]*x[(t + (LENGTH - i))%LENGTH];
     }
 
     t = (t + 1)%LENGTH;
@@ -56,9 +56,8 @@ interrupt void interrupt4(void) // interrupt service routine
 
 int main(void)
 {
-  // initialize left and right input vectors
-	memset(x_l,0,LENGTH*sizeof(float));
-	memset(x_r,0,LENGTH*sizeof(float));
+  // initialize input vectors
+	memset(x,0,LENGTH*sizeof(float));
 // interrupt function triggers runs each time an audio sample is received
 	L138_initialise_intr(FS_22050_HZ,ADC_GAIN_0DB,DAC_ATTEN_0DB,LCDK_LINE_INPUT);
   while(1);
